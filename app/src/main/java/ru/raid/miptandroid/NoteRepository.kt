@@ -1,6 +1,7 @@
 package ru.raid.miptandroid
 
-import java.util.*
+import java.util.Calendar
+import java.util.Random
 
 class NoteRepository(val size: Int) {
     private val notes: Array<Note>

@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_detailed_note.*
+import kotlinx.android.synthetic.main.activity_detailed_note.noteImage
+import kotlinx.android.synthetic.main.activity_detailed_note.noteText
+
+fun Note.getImageResource(context: Context) =
+    context.resources.getIdentifier("p${imageId}", "drawable", context.packageName)
 
 class DetailedNoteActivity : AppCompatActivity() {
 
@@ -17,9 +21,7 @@ class DetailedNoteActivity : AppCompatActivity() {
     }
 
     private fun bindNote(note: Note) {
-        noteImage.setImageResource(
-            resources.getIdentifier("p${note.imageId}", "drawable", packageName)
-        )
+        noteImage.setImageResource(note.getImageResource(this))
         noteText.text = note.text
         supportActionBar?.apply {
             title = note.title

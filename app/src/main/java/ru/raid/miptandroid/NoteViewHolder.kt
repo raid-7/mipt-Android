@@ -2,7 +2,10 @@ package ru.raid.miptandroid
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.note_card.view.*
+import kotlinx.android.synthetic.main.note_card.view.noteDate
+import kotlinx.android.synthetic.main.note_card.view.noteImage
+import kotlinx.android.synthetic.main.note_card.view.noteText
+import kotlinx.android.synthetic.main.note_card.view.noteTitle
 import java.text.SimpleDateFormat
 
 class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,9 +24,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             noteTitle.text = note.title
             noteDate.text = dateFormat.format(note.date.time)
             noteText.text = note.text
-            noteImage.setImageResource(
-                resources.getIdentifier("p${note.imageId}", "drawable", context.packageName)
-            )
+            noteImage.setImageResource(note.getImageResource(context))
         }
     }
 
