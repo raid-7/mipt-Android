@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
-        android:id="@+id/fragmentLeft"
+        android:id="@+id/fragmentSelection"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -14,7 +14,7 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <FrameLayout
-        android:id="@+id/fragmentRight"
+        android:id="@+id/fragmentInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"

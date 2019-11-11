@@ -22,7 +22,7 @@ class DetailedNoteFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val noteId = arguments?.getInt(NOTE_ID) ?: return selfDestroy()
+        val noteId = arguments?.getInt(NOTE_ID) ?: throw IllegalStateException("Note id is not specified")
         val note = noteRepo[noteId]
         bindNote(note)
     }
@@ -30,10 +30,6 @@ class DetailedNoteFragment: Fragment() {
     private fun bindNote(note: Note) {
         noteImage.setImageResource(note.getImageResource(context!!))
         noteText.text = note.text
-    }
-
-    private fun selfDestroy() {
-        activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
 
     companion object {

@@ -8,8 +8,8 @@ import kotlinx.android.synthetic.main.note_card.view.noteText
 import kotlinx.android.synthetic.main.note_card.view.noteTitle
 import java.text.SimpleDateFormat
 
-class NoteViewHolder(itemView: View, val listener: NoteSelectionListener?) : RecyclerView.ViewHolder(itemView) {
-    lateinit var currentNote: Note
+class NoteViewHolder(itemView: View, private val listener: NoteSelectionListener) : RecyclerView.ViewHolder(itemView) {
+    private lateinit var currentNote: Note
 
     init {
         itemView.setOnClickListener {
@@ -29,6 +29,6 @@ class NoteViewHolder(itemView: View, val listener: NoteSelectionListener?) : Rec
     }
 
     private fun showDetailedView(note: Note) {
-        listener?.invoke(note)
+        listener(note)
     }
 }

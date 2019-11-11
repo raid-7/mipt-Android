@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 typealias NoteSelectionListener = (Note) -> Unit
 
-class NoteAdapter(private val repo: NoteRepository) : RecyclerView.Adapter<NoteViewHolder>() {
-    var listener: NoteSelectionListener? = null
+class NoteAdapter(private val repo: NoteRepository, private val listener: NoteSelectionListener) :
+    RecyclerView.Adapter<NoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.note_card, parent, false)

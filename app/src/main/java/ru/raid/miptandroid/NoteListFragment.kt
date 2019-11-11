@@ -20,25 +20,19 @@ class NoteListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val isTablet = (activity as? MainActivity)?.isTablet ?: false
+        val isTablet = resources.isTablet
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         with(notesList) {
-            layoutManager = if (isLandscape && !isTablet || !isLandscape && isTablet) {
+            layoutManager = if (isLandscape xor isTablet) {
+                addItemDecoration(NoteLandscapeViewDecoration((8 * resources.displayMetrics.density).roundToInt()))
                 GridLayoutManager(this@NoteListFragment.context, 2, RecyclerView.VERTICAL, false)
-                    .apply {
-                        addItemDecoration(
-                            NoteLandscapeViewDecoration((8 * resources.displayMetrics.density).roundToInt()))
-                    }
             } else {
                 LinearLayoutManager(this@NoteListFragment.context)
             }
+
             recycledViewPool.setMaxRecycledViews(0, 10)
-            adapter = NoteAdapter(noteRepo).apply {
-                listener = {
-                    showDetailedView(it)
-                }
-            }
+            adapter = NoteAdapter(noteRepo, ::showDetailedView)
             setHasFixedSize(true)
         }
     }
