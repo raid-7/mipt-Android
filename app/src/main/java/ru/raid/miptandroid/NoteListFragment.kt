@@ -1,18 +1,19 @@
 package ru.raid.miptandroid
 
+import android.Manifest
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_note_list.addButton
 import kotlinx.android.synthetic.main.fragment_note_list.notesList
 import kotlin.math.roundToInt
 
-class NoteListFragment : Fragment() {
+class NoteListFragment : PermissionHelperFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_note_list, container, false)
     }
@@ -35,10 +36,25 @@ class NoteListFragment : Fragment() {
             adapter = NoteAdapter(noteRepo, ::showDetailedView)
             setHasFixedSize(true)
         }
+
+        addButton.setOnClickListener { showCamera() }
     }
 
     private fun showDetailedView(note: Note) {
         val mainActivity = activity as? MainActivity
         mainActivity?.showDetailedNote(note)
+    }
+
+    private fun showCamera() {
+        withPermissions(
+            arrayOf(Manifest.permission.CAMERA),
+            R.string.camera_rationale,
+            R.string.camera_rationale_in_settings
+        ) {
+            if (it) {
+                val mainActivity = activity as? MainActivity
+                mainActivity?.showCamera()
+            }
+        }
     }
 }

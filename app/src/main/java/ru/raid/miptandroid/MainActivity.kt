@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import java.io.File
 
 val noteRepo = NoteRepository(2000)
 val Resources.isTablet: Boolean
@@ -27,6 +28,18 @@ class MainActivity : FragmentActivity() {
             .replace(R.id.fragmentInfo, DetailedNoteFragment.forNote(note))
             .addToBackStack(DETAILED_NOTE_FRAGMENT)
             .commit()
+    }
+
+    fun showCamera() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentInfo, CameraFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun onPictureCaptured(file: File) {
+        supportFragmentManager.popBackStack()
+        // TODO
     }
 
     companion object {
