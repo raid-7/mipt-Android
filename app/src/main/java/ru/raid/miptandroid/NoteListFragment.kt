@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_note_list.addButton
 import kotlinx.android.synthetic.main.fragment_note_list.notesList
 import kotlin.math.roundToInt
 
-class NoteListFragment : PermissionHelperFragment() {
+class NoteListFragment : PermissionHelperFragment<Unit>() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_note_list, container, false)
     }
@@ -49,12 +49,15 @@ class NoteListFragment : PermissionHelperFragment() {
         withPermissions(
             arrayOf(Manifest.permission.CAMERA),
             R.string.camera_rationale,
-            R.string.camera_rationale_in_settings
-        ) {
-            if (it) {
-                val mainActivity = activity as? MainActivity
-                mainActivity?.showCamera()
-            }
+            R.string.camera_rationale_in_settings,
+            Unit
+        )
+    }
+
+    override fun onPermissionsResult(tag: Unit, granted: Boolean) {
+        if (granted) {
+            val mainActivity = activity as? MainActivity
+            mainActivity?.showCamera()
         }
     }
 }

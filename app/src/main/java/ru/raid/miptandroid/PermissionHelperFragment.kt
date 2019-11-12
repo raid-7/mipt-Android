@@ -5,32 +5,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
-typealias PermissionCallback = (Boolean) -> Unit
-
-open class PermissionHelperFragment : Fragment() {
+abstract class PermissionHelperFragment<Tag> : Fragment() {
     private var code: Int = 0
-    private val requests = mutableMapOf<Int, Request>()
-
-    fun withPermissions(
-        permissions: Array<out String>,
-        rationale: Int? = null,
-        rationaleSettings: Int? = null,
-        callback: PermissionCallback
-    ) {
-        val context = checkNotNull(context) { "No context" }
-
-        val notYetGranted = permissions.filter {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED
-        }.toTypedArray()
-        if (notYetGranted.isEmpty()) {
-            callback(true)
-            return
-        }
-
-        val requestCode = code++
-        requests[requestCode] = Request(callback, rationale, rationaleSettings)
-        requestPermissions(notYetGranted, requestCode)
-    }
+    private val requests = mutableMapOf<Int, Request<Tag>>()
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         val request = requests.remove(requestCode)
@@ -38,7 +15,7 @@ open class PermissionHelperFragment : Fragment() {
 
         val granted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
         if (granted) {
-            request.callback(true)
+            onPermissionsResult(request.tag, true)
         } else {
             val activateInSettings = permissions.any { !shouldShowRequestPermissionRationale(it) }
             if (request.rationale != null && !activateInSettings) {
@@ -48,12 +25,35 @@ open class PermissionHelperFragment : Fragment() {
                 Toast.makeText(context, request.rationaleSettings, Toast.LENGTH_SHORT).show()
             }
 
-            request.callback(false)
+            onPermissionsResult(request.tag, false)
         }
     }
 
-    private class Request(
-        val callback: PermissionCallback,
+    protected fun withPermissions(
+        permissions: Array<out String>,
+        rationale: Int? = null,
+        rationaleSettings: Int? = null,
+        tag: Tag
+    ) {
+        val context = checkNotNull(context) { "No context" }
+
+        val notYetGranted = permissions.filter {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED
+        }.toTypedArray()
+        if (notYetGranted.isEmpty()) {
+            onPermissionsResult(tag, true)
+            return
+        }
+
+        val requestCode = code++
+        requests[requestCode] = Request(tag, rationale, rationaleSettings)
+        requestPermissions(notYetGranted, requestCode)
+    }
+
+    protected abstract fun onPermissionsResult(tag: Tag, granted: Boolean)
+
+    private class Request<Tag>(
+        val tag: Tag,
         val rationale: Int?,
         val rationaleSettings: Int?
     )
