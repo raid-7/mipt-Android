@@ -81,7 +81,7 @@ abstract class PermissionHelperFragment<Tag: Enum<Tag>>(private val allTags: Arr
     }
 
     @Serializable
-    private data class Request(
+    private class Request(
         val tag: Int,
         val rationale: Int?,
         val rationaleInSettings: Int?

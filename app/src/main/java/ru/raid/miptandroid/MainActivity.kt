@@ -4,9 +4,10 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import ru.raid.miptandroid.db.AppDatabase
+import ru.raid.miptandroid.db.Note
 import java.io.File
 
-val noteRepo = NoteRepository(2000)
 val Resources.isTablet: Boolean
     get() = getBoolean(R.bool.is_tablet)
 
@@ -39,7 +40,9 @@ class MainActivity : FragmentActivity() {
 
     fun onPictureCaptured(file: File) {
         supportFragmentManager.popBackStack()
-        // TODO
+
+        val noteDao = AppDatabase.getInstance(this).noteDao()
+        noteDao.insert(NoteGenerator.generateNote(file))
     }
 
     companion object {

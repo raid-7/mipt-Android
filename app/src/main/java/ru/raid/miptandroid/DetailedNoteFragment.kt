@@ -1,7 +1,6 @@
 package ru.raid.miptandroid
 
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteImage
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import ru.raid.miptandroid.db.AppDatabase
+import ru.raid.miptandroid.db.Note
 
-
-fun Note.getImageResource(context: Context) =
-    context.resources.getIdentifier("p${imageId}", "drawable", context.packageName)
 
 class DetailedNoteFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -22,13 +23,19 @@ class DetailedNoteFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val noteId = arguments?.getInt(NOTE_ID) ?: throw IllegalStateException("Note id is not specified")
-        val note = noteRepo[noteId]
-        bindNote(note)
+        val noteId = arguments?.getLong(NOTE_ID) ?: throw IllegalStateException("Note id is not specified")
+        val noteDao = AppDatabase.getInstance(context!!).noteDao()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val note = noteDao.get(noteId)
+            launch(Dispatchers.Main) {
+                bindNote(checkNotNull(note) { "No such note" })
+            }
+        }
     }
 
     private fun bindNote(note: Note) {
-        noteImage.setImageResource(note.getImageResource(context!!))
+        noteImage.setImageBitmap(note.bitmap)
         noteText.text = note.text
     }
 
@@ -38,7 +45,7 @@ class DetailedNoteFragment: Fragment() {
         fun forNote(note: Note): DetailedNoteFragment {
             val fragment = DetailedNoteFragment()
             fragment.arguments = Bundle().apply {
-                putInt(NOTE_ID, note.id)
+                putLong(NOTE_ID, note.id)
             }
             return fragment
         }

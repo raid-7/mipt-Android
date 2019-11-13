@@ -1,24 +1,18 @@
 package ru.raid.miptandroid
 
+import java.io.File
 import java.util.Calendar
 import java.util.Random
 
-class NoteRepository(val size: Int) {
-    private val notes: Array<Note>
+object NoteGenerator {
     private val random = Random()
 
-    init {
-        notes = Array(size) { generateNote(it) }
-    }
-
-    operator fun get(index: Int) = notes[index]
-
-    private fun generateNote(id: Int) = Note(
-        id,
-        Calendar.getInstance(),
+    fun generateNote(image: File) = ru.raid.miptandroid.db.Note(
+        0,
         generateText(4, 8, random.nextInt(2) + 1),
         generateText(3, 10, random.nextInt(20) + 20),
-        random.nextInt(TOTAL_IMAGES_AVAILABLE)
+        image.absolutePath,
+        Calendar.getInstance().timeInMillis
     )
 
     private fun generateWord(minWordLen: Int, maxWordLen: Int, first_uppercase: Boolean = false): String {
@@ -40,14 +34,12 @@ class NoteRepository(val size: Int) {
         for (i in 0 until words) {
             if (i != 0)
                 result.append(' ')
-            result.append(generateWord(minWordLen, maxWordLen,  i == 0 || random.nextBoolean()))
+            result.append(generateWord(minWordLen, maxWordLen, i == 0 || random.nextBoolean()))
         }
         return result.toString()
     }
 
-    companion object {
-        private const val TOTAL_IMAGES_AVAILABLE = 20
-        private const val ALPHABET_LOWERCASE = "abcdefghijklmnopqrstuvwxyz"
-        private const val ALPHABET_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    }
+    private const val TOTAL_IMAGES_AVAILABLE = 20
+    private const val ALPHABET_LOWERCASE = "abcdefghijklmnopqrstuvwxyz"
+    private const val ALPHABET_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 }

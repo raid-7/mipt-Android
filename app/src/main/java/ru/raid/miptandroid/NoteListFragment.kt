@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_note_list.addButton
 import kotlinx.android.synthetic.main.fragment_note_list.notesList
+import ru.raid.miptandroid.db.AppDatabase
+import ru.raid.miptandroid.db.Note
 import kotlin.math.roundToInt
 
 class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag>(PermissionTag.values()) {
@@ -24,6 +26,11 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         val isTablet = resources.isTablet
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
+        val recycleViewAdapter = NoteAdapter(::showDetailedView)
+        AppDatabase.getInstance(context!!).noteDao().getAll().observe(::getLifecycle) {
+            recycleViewAdapter.notes = it
+        }
+
         with(notesList) {
             layoutManager = if (isLandscape xor isTablet) {
                 addItemDecoration(NoteLandscapeViewDecoration((8 * resources.displayMetrics.density).roundToInt()))
@@ -33,7 +40,7 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
             }
 
             recycledViewPool.setMaxRecycledViews(0, 10)
-            adapter = NoteAdapter(noteRepo, ::showDetailedView)
+            adapter = recycleViewAdapter
             setHasFixedSize(true)
         }
 
