@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteImage
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteText
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
@@ -26,7 +26,7 @@ class DetailedNoteFragment: Fragment() {
         val noteId = arguments?.getLong(NOTE_ID) ?: throw IllegalStateException("Note id is not specified")
         val noteDao = AppDatabase.getInstance(context!!).noteDao()
 
-        GlobalScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val note = noteDao.get(noteId)
             launch(Dispatchers.Main) {
                 bindNote(checkNotNull(note) { "No such note" })
