@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_note_list.addButton
 import kotlinx.android.synthetic.main.fragment_note_list.notesList
 import kotlin.math.roundToInt
 
-class NoteListFragment : PermissionHelperFragment<Unit>() {
+class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag>(PermissionTag.values()) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_note_list, container, false)
     }
@@ -50,14 +50,18 @@ class NoteListFragment : PermissionHelperFragment<Unit>() {
             arrayOf(Manifest.permission.CAMERA),
             R.string.camera_rationale,
             R.string.camera_rationale_in_settings,
-            Unit
+            PermissionTag.CAMERA_START
         )
     }
 
-    override fun onPermissionsResult(tag: Unit, granted: Boolean) {
-        if (granted) {
+    override fun onPermissionsResult(tag: PermissionTag, granted: Boolean) {
+        if (tag == PermissionTag.CAMERA_START && granted) {
             val mainActivity = activity as? MainActivity
             mainActivity?.showCamera()
         }
+    }
+
+    enum class PermissionTag {
+        CAMERA_START
     }
 }
