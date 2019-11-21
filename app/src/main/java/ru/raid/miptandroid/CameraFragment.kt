@@ -1,6 +1,7 @@
 package ru.raid.miptandroid
 
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -33,11 +34,8 @@ class CameraFragment : Fragment() {
     }
 
     private fun takePicture() {
-        cameraView.takePicture(nextRandomFile(), AsyncTask.SERIAL_EXECUTOR, imageCaptureListener)
+        cameraView.takePicture(nextRandomFile(requireContext()), AsyncTask.SERIAL_EXECUTOR, imageCaptureListener)
     }
-
-    private fun nextRandomFile() =
-        File(context!!.filesDir, UUID.randomUUID().toString())
 
     private inner class ImageCaptureListener : ImageCapture.OnImageSavedListener {
         override fun onImageSaved(file: File) {
@@ -51,5 +49,9 @@ class CameraFragment : Fragment() {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
         }
+
     }
 }
+
+private fun nextRandomFile(context: Context) =
+    File(context.filesDir, UUID.randomUUID().toString())

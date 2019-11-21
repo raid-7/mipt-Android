@@ -24,7 +24,7 @@ class DetailedNoteFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val noteId = arguments?.getLong(NOTE_ID) ?: throw IllegalStateException("Note id is not specified")
-        val noteDao = AppDatabase.getInstance(context!!).noteDao()
+        val noteDao = AppDatabase.getInstance(requireContext()).noteDao()
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val note = noteDao.get(noteId)

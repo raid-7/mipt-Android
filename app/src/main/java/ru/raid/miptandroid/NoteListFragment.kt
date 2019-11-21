@@ -27,7 +27,7 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         val recycleViewAdapter = NoteAdapter(::showDetailedView)
-        AppDatabase.getInstance(context!!).noteDao().getAll().observe(::getLifecycle) {
+        AppDatabase.getInstance(requireContext()).noteDao().getAll().observe(::getLifecycle) {
             recycleViewAdapter.notes = it
         }
 
