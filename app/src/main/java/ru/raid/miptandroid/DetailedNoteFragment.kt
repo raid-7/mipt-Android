@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_detailed_note.noteImage
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
 
@@ -28,7 +29,7 @@ class DetailedNoteFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val note = noteDao.get(noteId)
-            launch(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
                 bindNote(checkNotNull(note) { "No such note" })
             }
         }

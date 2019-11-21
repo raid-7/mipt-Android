@@ -4,6 +4,9 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
 import java.io.File
@@ -42,7 +45,9 @@ class MainActivity : FragmentActivity() {
         supportFragmentManager.popBackStack()
 
         val noteDao = AppDatabase.getInstance(this).noteDao()
-        noteDao.insert(NoteGenerator.generateNote(file))
+        lifecycleScope.launch(Dispatchers.IO) {
+            noteDao.insert(NoteGenerator.generateNote(file))
+        }
     }
 
     companion object {
