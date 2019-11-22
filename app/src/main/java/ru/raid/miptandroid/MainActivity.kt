@@ -2,7 +2,7 @@ package ru.raid.miptandroid
 
 import android.content.res.Resources
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import java.io.File
 val Resources.isTablet: Boolean
     get() = getBoolean(R.bool.is_tablet)
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,7 +29,7 @@ class MainActivity : FragmentActivity() {
     fun showDetailedNote(note: Note) {
         supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentInfo, DetailedNoteFragment.forNote(note))
+            .replace(R.id.fragmentInfo, DetailedNoteFragment.forNote(note), DETAILED_NOTE_FRAGMENT)
             .addToBackStack(DETAILED_NOTE_FRAGMENT)
             .commit()
     }
@@ -51,6 +51,6 @@ class MainActivity : FragmentActivity() {
     }
 
     companion object {
-        private val DETAILED_NOTE_FRAGMENT = "detailed_note"
+        private const val DETAILED_NOTE_FRAGMENT = "detailed_note"
     }
 }

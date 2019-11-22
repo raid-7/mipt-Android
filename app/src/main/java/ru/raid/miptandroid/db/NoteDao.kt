@@ -4,15 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
-interface NoteDao {
+abstract class NoteDao {
     @Insert
-    suspend fun insert(note: Note)
+    abstract suspend fun insert(note: Note)
+
+    @Update
+    abstract suspend fun update(note: Note)
 
     @Query("SELECT * FROM notes")
-    fun getAll(): LiveData<List<Note>>
+    abstract fun getAll(): LiveData<List<Note>>
 
     @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
-    suspend fun get(id: Long): Note?
+    abstract suspend fun get(id: Long): Note?
 }
