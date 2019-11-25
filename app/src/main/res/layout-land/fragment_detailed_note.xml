@@ -10,6 +10,7 @@
         android:id="@+id/noteImage"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:maxWidth="280dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,17 +19,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
-        tools:src="@drawable/p0" />
+        tools:src="@drawable/ic_add" />
 
-    <TextView
+    <EditText
+        android:inputType="textCapSentences|textMultiLine"
+        android:scrollHorizontally="false"
         android:id="@+id/noteText"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/noteImage"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:text="Lorem ipsum bla bla bla bla bla kek sor fur mark sup sup lipppers skipper gotcha." />
 

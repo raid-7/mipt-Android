@@ -10,7 +10,7 @@ object NoteGenerator {
     fun generateNote(image: File) = ru.raid.miptandroid.db.Note(
         0,
         generateText(4, 8, random.nextInt(2) + 1),
-        generateText(3, 10, random.nextInt(20) + 20),
+        "",
         image.absolutePath,
         Calendar.getInstance().timeInMillis
     )
