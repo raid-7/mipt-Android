@@ -65,6 +65,9 @@ class DetailedNoteFragment : Fragment() {
     }
 
     private fun saveNoteContent() {
+        if (!::note.isInitialized)
+            return
+
         val text = noteText.text.toString()
         note = Note(
             note.id, note.title,
