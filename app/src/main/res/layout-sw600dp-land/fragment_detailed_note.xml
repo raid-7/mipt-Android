@@ -8,12 +8,12 @@
 
     <ImageView
         android:id="@+id/noteImage"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
         app:layout_constraintHeight_percent=".5"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/noteText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="16dp" />
@@ -21,10 +21,12 @@
     <EditText
         android:inputType="textCapSentences|textMultiLine"
         android:scrollHorizontally="false"
+        android:gravity="top"
         android:id="@+id/noteText"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/noteImage"
         app:layout_constraintLeft_toLeftOf="parent"

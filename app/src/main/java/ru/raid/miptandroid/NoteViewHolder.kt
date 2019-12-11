@@ -26,7 +26,7 @@ class NoteViewHolder(itemView: View, private val listener: NoteSelectionListener
             noteTitle.text = note.title
             noteDate.text = dateFormat.format(Date(note.date))
             noteText.text = note.text
-            noteImage.setImageBitmap(note.bitmap)
+            note.loadImageInto(noteImage)
         }
     }
 

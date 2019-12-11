@@ -9,30 +9,34 @@
     <ImageView
         android:id="@+id/noteImage"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:maxWidth="280dp"
         android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/noteText"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
+        app:layout_constraintHorizontal_weight="1"
         tools:src="@drawable/ic_add" />
 
     <EditText
         android:inputType="textCapSentences|textMultiLine"
         android:scrollHorizontally="false"
+        android:gravity="top"
         android:id="@+id/noteText"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/noteImage"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_weight="1"
         tools:text="Lorem ipsum bla bla bla bla bla kek sor fur mark sup sup lipppers skipper gotcha." />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
