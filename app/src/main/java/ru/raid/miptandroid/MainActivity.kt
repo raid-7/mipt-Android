@@ -49,6 +49,17 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    fun showDeleteNoteDialog(note: Note) {
+        DeleteNoteDialogFragment.forNote(note).show(supportFragmentManager, null)
+    }
+
+    fun deleteNote(noteId: Long) {
+        val noteDao = AppDatabase.getInstance(this).noteDao()
+        lifecycleScope.launch(Dispatchers.IO) {
+            noteDao.remove(noteId)
+        }
+    }
+
     fun onPictureCaptured(file: File) {
         supportFragmentManager.popBackStack()
 

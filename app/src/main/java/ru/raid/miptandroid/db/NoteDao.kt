@@ -19,4 +19,7 @@ abstract class NoteDao {
 
     @Query("SELECT * FROM notes WHERE id = :id LIMIT 1")
     abstract suspend fun get(id: Long): Note?
+
+    @Query("DELETE FROM notes WHERE id = :id")
+    abstract suspend fun remove(id: Long)
 }

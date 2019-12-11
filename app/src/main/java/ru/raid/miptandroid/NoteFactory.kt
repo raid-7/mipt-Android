@@ -9,6 +9,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.raid.miptandroid.db.Note
 import java.io.File
 import java.util.Calendar
 import kotlin.coroutines.resume
@@ -17,7 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class NoteFactory(private val context: Context) {
     fun createWithImage(image: File) =
-        ru.raid.miptandroid.db.Note(
+        Note(
             0,
             "",
             image.absolutePath,
