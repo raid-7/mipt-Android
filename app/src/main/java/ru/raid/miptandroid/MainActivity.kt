@@ -15,9 +15,14 @@ val Resources.isTablet: Boolean
     get() = getBoolean(R.bool.is_tablet)
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var noteFactory: NoteFactory
+    private val nonReadyNotes = mutableSetOf<Long>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        noteFactory = NoteFactory(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -27,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showDetailedNote(note: Note) {
+        if (note.id in nonReadyNotes)
+            return
+
         supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentInfo, DetailedNoteFragment.forNote(note), DETAILED_NOTE_FRAGMENT)
@@ -46,7 +54,15 @@ class MainActivity : AppCompatActivity() {
 
         val noteDao = AppDatabase.getInstance(this).noteDao()
         lifecycleScope.launch(Dispatchers.IO) {
-            noteDao.insert(NoteGenerator.generateNote(file))
+            val note = noteFactory.createWithImage(file)
+            val noteId = noteDao.insert(note)
+
+            nonReadyNotes.add(noteId)
+
+            val text = noteFactory.recognizeText(file)
+            noteDao.update(Note(noteId, text, note.imagePath, note.date))
+
+            nonReadyNotes.remove(noteId)
         }
     }
 

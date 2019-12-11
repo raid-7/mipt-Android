@@ -23,18 +23,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <TextView
-            android:id="@+id/noteTitle"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintLeft_toRightOf="@id/noteImage"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Note Title" />
-
         <TextView
             android:id="@+id/noteDate"
             android:layout_width="wrap_content"
@@ -42,7 +30,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/noteTitle"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="21.12.1995" />
 
         <TextView
@@ -58,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/noteImage"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/noteTitle"
+            app:layout_constraintTop_toBottomOf="@id/noteDate"
             app:layout_constraintVertical_bias="0.0"
             tools:text="Lorem ipsum bla bla bla bla bla kek sor fur mark sup sup lipppers skipper gotcha." />
 

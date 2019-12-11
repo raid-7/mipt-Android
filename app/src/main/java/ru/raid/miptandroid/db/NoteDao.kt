@@ -9,7 +9,7 @@ import androidx.room.Update
 @Dao
 abstract class NoteDao {
     @Insert
-    abstract suspend fun insert(note: Note)
+    abstract suspend fun insert(note: Note): Long
 
     @Update
     abstract suspend fun update(note: Note)

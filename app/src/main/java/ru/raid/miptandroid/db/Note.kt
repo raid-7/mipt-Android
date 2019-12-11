@@ -11,7 +11,6 @@ import java.io.File
 @Entity(tableName = "notes")
 class Note(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    val title: String,
     val text: String,
     val imagePath: String,
     val date: Long

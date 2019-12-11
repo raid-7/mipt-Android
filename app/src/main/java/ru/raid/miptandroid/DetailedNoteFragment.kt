@@ -96,11 +96,7 @@ class DetailedNoteFragment : Fragment() {
             return
 
         val text = noteText.text.toString()
-        note = Note(
-            note.id, note.title,
-            text,
-            note.imagePath, note.date
-        )
+        note = Note(note.id, text, note.imagePath, note.date)
         val noteDao = AppDatabase.getInstance(requireContext()).noteDao()
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             noteDao.update(note)
