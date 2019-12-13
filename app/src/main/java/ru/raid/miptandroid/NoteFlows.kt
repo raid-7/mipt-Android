@@ -21,12 +21,16 @@ class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) 
             val note = createWithImage(file)
             val noteId = noteDao.insert(note)
 
-            nonReadyNotes.add(noteId)
+            synchronized(nonReadyNotes) {
+                nonReadyNotes.add(noteId)
+            }
 
             val text = recognizer.recognizeText(file)
             noteDao.update(Note(noteId, text, note.imagePath, note.date))
 
-            nonReadyNotes.remove(noteId)
+            synchronized(nonReadyNotes) {
+                nonReadyNotes.remove(noteId)
+            }
         }
     }
 
@@ -45,7 +49,9 @@ class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) 
         context.startActivity(Intent.createChooser(intent, null))
     }
 
-    fun isReady(note: Note): Boolean = note.id !in nonReadyNotes
+    fun isReady(note: Note): Boolean = synchronized(nonReadyNotes) {
+        note.id !in nonReadyNotes
+    }
 
     private fun createWithImage(image: File) =
         Note(
