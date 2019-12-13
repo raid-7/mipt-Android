@@ -79,6 +79,9 @@ class DetailedNoteFragment : Fragment() {
     }
 
     private fun adjustLayout() {
+        if (context == null)
+            return
+
         val isTablet = resources.isTablet
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
