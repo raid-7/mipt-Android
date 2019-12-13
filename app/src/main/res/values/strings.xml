@@ -4,5 +4,6 @@
     <string name="camera_rationale">Camera is required to add a note</string>
     <string name="camera_rationale_in_settings">Grant camera permission in settings to add a note</string>
     <string name="camera_tap_explanation">Tap to take photo</string>
+    <string name="recognition_error">Cannot recognize text</string>
     <string name="saveMenuItem">Save</string>
 </resources>
