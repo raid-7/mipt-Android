@@ -1,7 +1,6 @@
 package ru.raid.miptandroid
 
 import android.Manifest
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,11 +28,8 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         }
 
         override fun onShare(note: Note) {
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, note.text)
-                type = "text/plain"
-            }
-            startActivity(Intent.createChooser(intent, null))
+            val mainActivity = activity as? MainActivity
+            mainActivity?.noteFlows?.share(note)
         }
     }
 

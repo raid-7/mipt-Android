@@ -14,7 +14,7 @@ class DeleteNoteDialogFragment : DialogFragment() {
                 val mainActivity = activity as? MainActivity
                 val noteId = arguments?.getLong(NOTE_ID)
                 if (mainActivity != null && noteId != null)
-                    mainActivity.deleteNote(noteId)
+                    mainActivity.noteFlows.deleteNote(noteId)
             }
             setNegativeButton(R.string.buttonCancel) { _, _ -> }
         }.create()

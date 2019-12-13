@@ -3,11 +3,13 @@ package ru.raid.miptandroid
 import android.view.View
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.note_card.view.noteDate
 import kotlinx.android.synthetic.main.note_card.view.noteImage
 import kotlinx.android.synthetic.main.note_card.view.noteOptions
 import kotlinx.android.synthetic.main.note_card.view.noteText
 import ru.raid.miptandroid.db.Note
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -29,7 +31,10 @@ class NoteViewHolder(itemView: View, private val listener: NoteActionListener) :
         with(itemView) {
             noteDate.text = dateFormat.format(Date(note.date))
             noteText.text = note.text
-            note.loadImageInto(noteImage)
+            Picasso.get().load(File(note.imagePath))
+                .fit()
+                .centerInside()
+                .into(noteImage)
         }
     }
 

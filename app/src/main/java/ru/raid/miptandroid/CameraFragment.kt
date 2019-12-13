@@ -40,7 +40,10 @@ class CameraFragment : Fragment() {
     private inner class ImageCaptureListener : ImageCapture.OnImageSavedListener {
         override fun onImageSaved(file: File) {
             val activity = activity as? MainActivity
-            activity?.onPictureCaptured(file)
+            activity?.let {
+                it.noteFlows.addNewNote(file)
+                it.popFragment()
+            }
         }
 
         override fun onError(imageCaptureError: ImageCapture.ImageCaptureError, message: String, cause: Throwable?) {
