@@ -16,6 +16,23 @@ import ru.raid.miptandroid.db.Note
 import kotlin.math.roundToInt
 
 class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag>(PermissionTag.values()) {
+    private val noteListener = object : NoteActionListener {
+        override fun onSelect(note: Note) {
+            val mainActivity = activity as? MainActivity
+            mainActivity?.showDetailedNote(note)
+        }
+
+        override fun onDelete(note: Note) {
+            val mainActivity = activity as? MainActivity
+            mainActivity?.showDeleteNoteDialog(note)
+        }
+
+        override fun onShare(note: Note) {
+            val mainActivity = activity as? MainActivity
+            mainActivity?.noteFlows?.share(note)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_note_list, container, false)
     }
@@ -26,7 +43,7 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         val isTablet = resources.isTablet
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-        val recycleViewAdapter = NoteAdapter(::showDetailedView)
+        val recycleViewAdapter = NoteAdapter(noteListener)
         AppDatabase.getInstance(requireContext()).noteDao().getAll().observe(::getLifecycle) {
             recycleViewAdapter.notes = it
         }
@@ -47,9 +64,11 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         addButton.setOnClickListener { showCamera() }
     }
 
-    private fun showDetailedView(note: Note) {
-        val mainActivity = activity as? MainActivity
-        mainActivity?.showDetailedNote(note)
+    override fun onPermissionsResult(tag: PermissionTag, granted: Boolean) {
+        if (tag == PermissionTag.CAMERA_START && granted) {
+            val mainActivity = activity as? MainActivity
+            mainActivity?.showCamera()
+        }
     }
 
     private fun showCamera() {
@@ -59,13 +78,6 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
             R.string.camera_rationale_in_settings,
             PermissionTag.CAMERA_START
         )
-    }
-
-    override fun onPermissionsResult(tag: PermissionTag, granted: Boolean) {
-        if (tag == PermissionTag.CAMERA_START && granted) {
-            val mainActivity = activity as? MainActivity
-            mainActivity?.showCamera()
-        }
     }
 
     enum class PermissionTag {

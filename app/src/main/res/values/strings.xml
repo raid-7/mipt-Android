@@ -6,4 +6,9 @@
     <string name="camera_tap_explanation">Tap to take photo</string>
     <string name="recognition_error">Cannot recognize text</string>
     <string name="saveMenuItem">Save</string>
+    <string name="deleteMenuItem">Delete</string>
+    <string name="shareMenuItem">Share</string>
+    <string name="buttonCancel">Cancel</string>
+    <string name="buttonYes">Yes</string>
+    <string name="askDeleteNote">Delete note?</string>
 </resources>

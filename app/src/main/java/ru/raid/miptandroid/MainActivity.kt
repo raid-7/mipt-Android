@@ -4,25 +4,19 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
-import java.io.File
 
 val Resources.isTablet: Boolean
     get() = getBoolean(R.bool.is_tablet)
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var noteFactory: NoteFactory
-    private val nonReadyNotes = mutableSetOf<Long>()
+    lateinit var noteFlows: NoteFlows
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        noteFactory = NoteFactory(this)
+        noteFlows = NoteFlows(this, lifecycle)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -32,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showDetailedNote(note: Note) {
-        if (note.id in nonReadyNotes)
+        if (!noteFlows.isReady(note))
             return
 
         supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -49,21 +43,12 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun onPictureCaptured(file: File) {
+    fun showDeleteNoteDialog(note: Note) {
+        DeleteNoteDialogFragment.forNote(note).show(supportFragmentManager, null)
+    }
+
+    fun popFragment() {
         supportFragmentManager.popBackStack()
-
-        val noteDao = AppDatabase.getInstance(this).noteDao()
-        lifecycleScope.launch(Dispatchers.IO) {
-            val note = noteFactory.createWithImage(file)
-            val noteId = noteDao.insert(note)
-
-            nonReadyNotes.add(noteId)
-
-            val text = noteFactory.recognizeText(file)
-            noteDao.update(Note(noteId, text, note.imagePath, note.date))
-
-            nonReadyNotes.remove(noteId)
-        }
     }
 
     companion object {

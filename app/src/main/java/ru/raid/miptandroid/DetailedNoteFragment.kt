@@ -14,6 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteImage
 import kotlinx.android.synthetic.main.fragment_detailed_note.noteText
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
+import java.io.File
 
 
 class DetailedNoteFragment : Fragment() {
@@ -64,11 +67,21 @@ class DetailedNoteFragment : Fragment() {
         }
 
     private fun bindNote(note: Note) {
-        note.loadImageInto(noteImage, ::adjustLayout)
+        Picasso.get().load(File(note.imagePath))
+            .fit()
+            .centerInside()
+            .into(noteImage, object : Callback.EmptyCallback() {
+                override fun onSuccess() {
+                    adjustLayout()
+                }
+            })
         noteText.setText(note.text)
     }
 
     private fun adjustLayout() {
+        if (context == null)
+            return
+
         val isTablet = resources.isTablet
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 

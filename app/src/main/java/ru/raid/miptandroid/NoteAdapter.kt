@@ -6,9 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.raid.miptandroid.db.Note
 
 
-typealias NoteSelectionListener = (Note) -> Unit
+interface NoteActionListener {
+    fun onSelect(note: Note)
+    fun onDelete(note: Note)
+    fun onShare(note: Note)
+}
 
-class NoteAdapter(private val listener: NoteSelectionListener) :
+class NoteAdapter(private val listener: NoteActionListener) :
     RecyclerView.Adapter<NoteViewHolder>() {
     var notes: List<Note> = emptyList()
         set(value) {
