@@ -8,6 +8,7 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.coroutines.resume
@@ -24,7 +25,9 @@ class TextRecognizer(private val context: Context) {
                 result.text
             } catch (exc: Exception) {
                 exc.printStackTrace()
-                Toast.makeText(context, R.string.recognition_error, Toast.LENGTH_SHORT).show()
+                launch(Dispatchers.Main) {
+                    Toast.makeText(context, R.string.recognition_error, Toast.LENGTH_SHORT).show()
+                }
                 ""
             }
         }
