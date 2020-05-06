@@ -1,4 +1,4 @@
-package raid.neuroide.reproto.service
+package ru.raid.miptandroid
 
 import io.ktor.application.ApplicationCall
 import io.ktor.features.StatusPages
