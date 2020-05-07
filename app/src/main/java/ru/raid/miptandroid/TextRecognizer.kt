@@ -10,16 +10,15 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class TextRecognizer(private val context: Context) {
-    suspend fun recognizeText(file: File): String =
+    suspend fun recognizeText(imageUri: Uri): String =
         withContext(Dispatchers.IO) {
             try {
-                val image = FirebaseVisionImage.fromFilePath(context, Uri.fromFile(file))
+                val image = FirebaseVisionImage.fromFilePath(context, imageUri)
                 val recognizer = FirebaseVision.getInstance().onDeviceTextRecognizer
                 val result = recognizer.process(image)
                 result.text

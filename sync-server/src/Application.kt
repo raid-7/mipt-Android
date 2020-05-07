@@ -1,7 +1,11 @@
 package ru.raid.miptandroid
 
 import io.ktor.application.*
+import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
+import io.ktor.gson.gson
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import io.ktor.http.content.streamProvider
@@ -21,6 +25,10 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
     val serviceConfig = environment.config.config("ktor.application.service")
     val service = NoteSharingService(serviceConfig)
+
+    install(ContentNegotiation) {
+        gson {}
+    }
 
     install(StatusPages) {
         catchStatus {
@@ -52,8 +60,15 @@ fun Application.module(testing: Boolean = false) {
 
                 call.respondText(out.joinToString("; "))
             }
-            get("/{id}") {
-                // TODO
+            get("/{id}/data") {
+                val id = call.parameters["id"] ?: throw BadRequestException("Specify prototype id")
+                val data = service.getNoteData(id)
+                call.respond(HttpStatusCode.OK, data)
+            }
+            get("/{id}/image") {
+                val id = call.parameters["id"] ?: throw BadRequestException("Specify prototype id")
+                val image = service.getNoteImage(id)
+                call.respondBytes(image, ContentType.Image.PNG, HttpStatusCode.OK)
             }
         }
     }

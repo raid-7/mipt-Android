@@ -10,6 +10,7 @@ interface NoteActionListener {
     fun onSelect(note: Note)
     fun onDelete(note: Note)
     fun onShare(note: Note)
+    fun onSync(note: Note)
 }
 
 class NoteAdapter(private val listener: NoteActionListener) :

@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.view.CameraView
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_camera.cameraView
 import java.io.File
@@ -37,22 +39,27 @@ class CameraFragment : Fragment() {
         cameraView.takePicture(nextRandomFile(requireContext()), AsyncTask.SERIAL_EXECUTOR, imageCaptureListener)
     }
 
-    private inner class ImageCaptureListener : ImageCapture.OnImageSavedListener {
-        override fun onImageSaved(file: File) {
+    private inner class ImageCaptureListener : ImageCapture.OnImageSavedCallback {
+        override fun onImageSaved(imageOutput: ImageCapture.OutputFileResults) {
+            val uri = imageOutput.savedUri
             val activity = activity as? MainActivity
             activity?.let {
-                it.noteFlows.addNewNote(file)
+                if (uri != null) {
+                    it.noteFlows.addNewNote(uri)
+                } else {
+                    Log.e("ImageCapture", "Image URI is null")
+                }
                 it.popFragment()
             }
         }
 
-        override fun onError(imageCaptureError: ImageCapture.ImageCaptureError, message: String, cause: Throwable?) {
+        override fun onError(exc: ImageCaptureException) {
+            val message = exc.message ?: return
             Log.e("ImageCapture", message)
             context?.let {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
         }
-
     }
 }
 

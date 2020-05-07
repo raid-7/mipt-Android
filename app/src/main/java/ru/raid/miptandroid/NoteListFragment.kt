@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_note_list.addButton
-import kotlinx.android.synthetic.main.fragment_note_list.notesList
+import kotlinx.android.synthetic.main.fragment_note_list.*
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
 import kotlin.math.roundToInt
@@ -30,6 +29,11 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         override fun onShare(note: Note) {
             val mainActivity = activity as? MainActivity
             mainActivity?.noteFlows?.share(note)
+        }
+
+        override fun onSync(note: Note) {
+            val mainActivity = activity as? MainActivity
+            // TODO
         }
     }
 
@@ -62,12 +66,21 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         }
 
         addButton.setOnClickListener { showCamera() }
+        syncLoadButton.setOnClickListener { showSyncLoad() }
     }
 
     override fun onPermissionsResult(tag: PermissionTag, granted: Boolean) {
-        if (tag == PermissionTag.CAMERA_START && granted) {
-            val mainActivity = activity as? MainActivity
-            mainActivity?.showCamera()
+        if (!granted)
+            return
+
+        val mainActivity = activity as? MainActivity ?: return
+        when (tag) {
+            PermissionTag.SYNC_LOAD_START -> {
+                // TODO
+            }
+            PermissionTag.CAMERA_START -> {
+                mainActivity.showCamera()
+            }
         }
     }
 
@@ -80,7 +93,17 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         )
     }
 
+    private fun showSyncLoad() {
+        withPermissions(
+            arrayOf(Manifest.permission.CAMERA),
+            R.string.camera_rationale_qr,
+            R.string.camera_rationale_in_settings,
+            PermissionTag.SYNC_LOAD_START
+        )
+    }
+
     enum class PermissionTag {
-        CAMERA_START
+        CAMERA_START,
+        SYNC_LOAD_START
     }
 }

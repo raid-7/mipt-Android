@@ -2,30 +2,30 @@ package ru.raid.miptandroid
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
-import java.io.File
-import java.util.Calendar
+import java.util.*
 
 class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) {
     private val recognizer = TextRecognizer(context)
     private val nonReadyNotes = mutableSetOf<Long>()
 
-    fun addNewNote(file: File) {
+    fun addNewNote(imageUri: Uri) {
         val noteDao = AppDatabase.getInstance(context).noteDao()
         lifecycle.coroutineScope.launch(Dispatchers.IO) {
-            val note = createWithImage(file)
+            val note = createWithImage(imageUri)
             val noteId = noteDao.insert(note)
 
             synchronized(nonReadyNotes) {
                 nonReadyNotes.add(noteId)
             }
 
-            val text = recognizer.recognizeText(file)
+            val text = recognizer.recognizeText(imageUri)
             noteDao.update(Note(noteId, text, note.imagePath, note.date))
 
             synchronized(nonReadyNotes) {
@@ -53,11 +53,11 @@ class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) 
         note.id !in nonReadyNotes
     }
 
-    private fun createWithImage(image: File) =
+    private fun createWithImage(imageUri: Uri) =
         Note(
             0,
             "",
-            image.absolutePath,
+            imageUri.toString(),
             Calendar.getInstance().timeInMillis
         )
 }

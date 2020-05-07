@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.DEFAULT_REPETITION_ATTEMPTS
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.raid.miptandroid.NoteData
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -55,6 +56,26 @@ class Db(url: String? = null, user: String? = null, password: String? = null) {
             }
         }
         return null
+    }
+
+    fun loadNoteData(id: String): NoteData? = transaction {
+        SharedNotes
+            .slice(SharedNotes.text, SharedNotes.creationTimestamp)
+            .select {
+                SharedNotes.id.eq(id)
+            }.map {
+                NoteData(it[SharedNotes.text], it[SharedNotes.creationTimestamp])
+            }.firstOrNull()
+    }
+
+    fun loadNoteImage(id: String): ByteArray? = transaction {
+        SharedNotes
+            .slice(SharedNotes.image)
+            .select {
+                SharedNotes.id.eq(id)
+            }.map {
+                it[SharedNotes.image].bytes
+            }.firstOrNull()
     }
 
     fun removeOldNotes(age: Long) {

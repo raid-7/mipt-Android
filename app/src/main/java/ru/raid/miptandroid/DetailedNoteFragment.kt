@@ -2,6 +2,7 @@ package ru.raid.miptandroid
 
 
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.view.LayoutInflater
@@ -67,7 +68,7 @@ class DetailedNoteFragment : Fragment() {
         }
 
     private fun bindNote(note: Note) {
-        Picasso.get().load(File(note.imagePath))
+        Picasso.get().load(note.imageUri)
             .fit()
             .centerInside()
             .into(noteImage, object : Callback.EmptyCallback() {

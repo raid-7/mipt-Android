@@ -1,5 +1,6 @@
 package ru.raid.miptandroid
 
+import android.net.Uri
 import android.view.View
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ class NoteViewHolder(itemView: View, private val listener: NoteActionListener) :
         with(itemView) {
             noteDate.text = dateFormat.format(Date(note.date))
             noteText.text = note.text
-            Picasso.get().load(File(note.imagePath))
+            Picasso.get().load(note.imageUri)
                 .fit()
                 .centerInside()
                 .into(noteImage)
@@ -44,6 +45,10 @@ class NoteViewHolder(itemView: View, private val listener: NoteActionListener) :
 
         menu.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.menuSync -> {
+                    listener.onSync(note)
+                    true
+                }
                 R.id.menuShare -> {
                     listener.onShare(note)
                     true

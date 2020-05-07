@@ -1,13 +1,17 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Stringify</string>
 
     <string name="camera_rationale">Camera is required to add a note</string>
-    <string name="camera_rationale_in_settings">Grant camera permission in settings to add a note</string>
+    <string name="camera_rationale_qr">Camera is required to scan QR-code</string>
+    <string name="camera_rationale_in_settings">Grant camera permission in settings</string>
     <string name="camera_tap_explanation">Tap to take photo</string>
     <string name="recognition_error">Cannot recognize text</string>
+    <string name="sync_post_failed">Network error</string>
+
     <string name="saveMenuItem">Save</string>
     <string name="deleteMenuItem">Delete</string>
     <string name="shareMenuItem">Share</string>
+    <string name="syncMenuItem">Sync</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonYes">Yes</string>
     <string name="askDeleteNote">Delete note?</string>
