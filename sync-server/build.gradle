@@ -27,3 +27,14 @@ dependencies {
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
     testImplementation "com.h2database:h2:1.4.200"
 }
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+}
+
+task fatJar(type: Jar) {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    with jar
+}

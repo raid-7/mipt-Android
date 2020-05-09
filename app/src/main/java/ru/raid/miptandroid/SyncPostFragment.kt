@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import kotlinx.android.synthetic.main.fragment_sync_post.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -50,13 +52,18 @@ class SyncPostFragment : Fragment() {
         }
     }
 
+    @MainThread
     private fun showLoadAnimation() {
-        // TODO
+        progressOverlay.visibility = View.VISIBLE
+        qrView.visibility = View.GONE
     }
 
+    @MainThread
     private fun showSyncQr(syncId: String) {
         Log.d("SyncPost", syncId)
-        // TODO
+        progressOverlay.visibility = View.GONE
+        qrView.visibility = View.VISIBLE
+        qrView.setData(syncId).build()
     }
 
     private fun syncFailed() {
@@ -121,7 +128,7 @@ class SyncPostFragment : Fragment() {
         fun forNote(note: Note): SyncPostFragment {
             val fragment = SyncPostFragment()
             fragment.arguments = Bundle().apply {
-                putLong(SyncPostFragment.NOTE_ID, note.id)
+                putLong(NOTE_ID, note.id)
             }
             return fragment
         }

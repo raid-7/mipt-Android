@@ -94,6 +94,9 @@ abstract class CameraFragment : Fragment() {
 
     protected open fun onCameraReady(cameraProvider: ProcessCameraProvider, camera: Camera) {
         preview?.setSurfaceProvider(cameraView.createSurfaceProvider(camera.cameraInfo))
+        if (!camera.cameraInfo.hasFlashUnit()) {
+            flashButton.visibility = View.INVISIBLE
+        }
     }
 
     private fun initCamera(cameraProvider: ProcessCameraProvider) {
