@@ -5,6 +5,7 @@
     <string name="camera_rationale_qr">Camera is required to scan QR-code</string>
     <string name="camera_rationale_in_settings">Grant camera permission in settings</string>
     <string name="camera_tap_explanation">Tap to take photo</string>
+    <string name="camera_qr_explanation">"Scan QR code to load note"</string>
     <string name="recognition_error">Cannot recognize text</string>
     <string name="sync_post_failed">Network error</string>
 
@@ -15,4 +16,7 @@
     <string name="buttonCancel">Cancel</string>
     <string name="buttonYes">Yes</string>
     <string name="askDeleteNote">Delete note?</string>
+
+    <string name="buttonClose">Back</string>
+    <string name="buttonFlash">Toggle camera flash</string>
 </resources>

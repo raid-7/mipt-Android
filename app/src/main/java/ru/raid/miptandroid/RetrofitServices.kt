@@ -3,9 +3,10 @@ package ru.raid.miptandroid
 import android.content.Context
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class RetrofitServices private constructor(private val retrofit: Retrofit) {
-    val syncService = retrofit.create(SyncService::class.java)
+    val syncService: SyncService = retrofit.create(SyncService::class.java)
 
     companion object {
         @Volatile
@@ -20,6 +21,7 @@ class RetrofitServices private constructor(private val retrofit: Retrofit) {
                 val address = context.getString(R.string.sync_service)
                 val retrofit = Retrofit.Builder()
                     .baseUrl(address)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 val instance = RetrofitServices(retrofit)

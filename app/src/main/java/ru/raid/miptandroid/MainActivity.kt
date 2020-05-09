@@ -36,9 +36,27 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    fun showSyncPostFragment(note: Note) {
+        if (!noteFlows.isReady(note))
+            return
+
+        supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, 0)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentInfo, SyncPostFragment.forNote(note), SYNC_POST_FRAGMENT)
+            .addToBackStack(SYNC_POST_FRAGMENT)
+            .commit()
+    }
+
     fun showCamera() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentInfo, CameraFragment())
+            .replace(R.id.fragmentInfo, NoteCaptureFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun showSyncLoad() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentInfo, SyncLoadFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -53,5 +71,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val DETAILED_NOTE_FRAGMENT = "detailed_note"
+
+        // actually useless
+        private const val SYNC_POST_FRAGMENT = "sync_post"
     }
 }

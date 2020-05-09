@@ -1,13 +1,8 @@
 package ru.raid.miptandroid
 
-import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
-import ru.raid.miptandroid.db.AppDatabase
-import ru.raid.miptandroid.db.NoteDao
 
 interface SyncService {
     @GET("/shared-notes/{id}/data")
@@ -19,5 +14,5 @@ interface SyncService {
 
     @Multipart
     @POST("/shared-notes")
-    suspend fun shareNote(@Part("data") data: NoteData, image: MultipartBody.Part): String
+    suspend fun shareNote(@Part("data") data: NoteData, @Part image: MultipartBody.Part): String
 }

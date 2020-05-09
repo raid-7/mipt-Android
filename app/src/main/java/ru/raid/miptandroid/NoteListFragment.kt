@@ -33,7 +33,7 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
 
         override fun onSync(note: Note) {
             val mainActivity = activity as? MainActivity
-            // TODO
+            mainActivity?.showSyncPostFragment(note)
         }
     }
 
@@ -76,7 +76,7 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         val mainActivity = activity as? MainActivity ?: return
         when (tag) {
             PermissionTag.SYNC_LOAD_START -> {
-                // TODO
+                mainActivity.showSyncLoad()
             }
             PermissionTag.CAMERA_START -> {
                 mainActivity.showCamera()

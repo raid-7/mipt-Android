@@ -55,6 +55,7 @@ class SyncPostFragment : Fragment() {
     }
 
     private fun showSyncQr(syncId: String) {
+        Log.d("SyncPost", syncId)
         // TODO
     }
 
@@ -81,8 +82,11 @@ class SyncPostFragment : Fragment() {
             val bytes = contentResolver.openInputStream(uri)?.use {
                 it.readBytes()
             }
-            val type = contentResolver.getType(uri)
-            if (type == null || bytes == null) {
+
+            // CameraX library save images to JPEG
+            // camera-core:1.0.0-beta03
+            val type = contentResolver.getType(uri) ?: "image/jpeg"
+            if (bytes == null) {
                 Log.e("SyncPost", "type={$type}, bytes=${bytes}")
                 return null
             }

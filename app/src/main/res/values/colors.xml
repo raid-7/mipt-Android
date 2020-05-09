@@ -2,7 +2,14 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#03DAC6</color>
+    <color name="colorOnAccent">#ffffff</color>
     <color name="colorBackground">#ffffff</color>
+    <color name="chipText">#ffffff</color>
+    <color name="chipBackground">#9A000000</color>
     <color name="colorOptions">#a0a0a0</color>
+
+    <color name="cameraActionBarEnd">#00000000</color>
+    <color name="cameraActionBarStart">#000000</color>
+    <color name="cameraActionBarButton">#ffffff</color>
 </resources>

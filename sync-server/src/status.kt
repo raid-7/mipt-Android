@@ -13,6 +13,10 @@ open class StatusException(val status: HttpStatusCode, override val message: Str
 class BadRequestException(message: String) : StatusException(HttpStatusCode.BadRequest, message)
 class NotFoundException(message: String) : StatusException(HttpStatusCode.NotFound, message)
 class UnsupportedMediaTypeException(message: String) : StatusException(HttpStatusCode.UnsupportedMediaType, message)
+class ServiceUnavailableException(message: String) : StatusException(HttpStatusCode.ServiceUnavailable, message)
+class InternalServerErrorException(message: String) : StatusException(HttpStatusCode.InternalServerError, message) {
+    constructor() : this(HttpStatusCode.InternalServerError.description)
+}
 
 fun StatusPages.Configuration.catchStatus(
     handler: suspend PipelineContext<Unit, ApplicationCall>.(StatusException) -> Unit

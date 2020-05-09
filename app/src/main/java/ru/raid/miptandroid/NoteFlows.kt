@@ -34,6 +34,14 @@ class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) 
         }
     }
 
+    fun addReadyNote(data: NoteData, imageUri: Uri, inSyncId: String) {
+        val noteDao = AppDatabase.getInstance(context).noteDao()
+        lifecycle.coroutineScope.launch(Dispatchers.IO) {
+            val note = createWithData(data, imageUri, inSyncId)
+            val noteId = noteDao.insert(note)
+        }
+    }
+
     fun deleteNote(noteId: Long) {
         val noteDao = AppDatabase.getInstance(context).noteDao()
         lifecycle.coroutineScope.launch(Dispatchers.IO) {
@@ -52,6 +60,15 @@ class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) 
     fun isReady(note: Note): Boolean = synchronized(nonReadyNotes) {
         note.id !in nonReadyNotes
     }
+
+    private fun createWithData(data: NoteData, imageUri: Uri, inSyncId: String) =
+        Note(
+            0,
+            data.text,
+            imageUri.toString(),
+            data.date,
+            inSyncId
+        )
 
     private fun createWithImage(imageUri: Uri) =
         Note(

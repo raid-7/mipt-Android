@@ -1,5 +1,6 @@
 package ru.raid.miptandroid
 
+import com.google.gson.Gson
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
@@ -17,6 +18,7 @@ import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.util.hex
 import io.ktor.utils.io.core.readBytes
+import org.slf4j.Logger
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -37,28 +39,33 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
+        trace {
+            application.log.trace(it.buildText())
+        }
+
         route("/shared-notes") {
             post {
                 val multipart = call.receiveMultipart()
-                val out = arrayListOf<String>()
-                multipart.forEachPart {part ->
-                    out += when (part) {
-                        is PartData.FormItem -> {
-                            "FormItem(${part.name},${part.value})"
+                var data: NoteData? = null
+                var bytes: ByteArray? = null
+                multipart.forEachPart { part ->
+                    try {
+                        if (part.name == "data" && part is PartData.FormItem) {
+                            data = Gson().fromJson(part.value, NoteData::class.java)
+                        } else if (part.name == "image" && part is PartData.FileItem) {
+                            bytes = part.streamProvider().readAllBytes()
                         }
-                        is PartData.FileItem -> {
-                            val bytes = part.streamProvider().readBytes()
-                            "FileItem(${part.name},${part.originalFileName},${hex(bytes)})"
-                        }
-                        is PartData.BinaryItem -> {
-                            "BinaryItem(${part.name},${hex(part.provider().readBytes())})"
-                        }
+                    } finally {
+                        part.dispose()
                     }
-
-                    part.dispose()
                 }
 
-                call.respondText(out.joinToString("; "))
+                if (data == null || bytes == null) {
+                    throw BadRequestException("Note must contain data and image")
+                }
+
+                val id = service.addSharedNote(data!!, bytes!!)
+                call.respondPlainText(id, HttpStatusCode.Created)
             }
             get("/{id}/data") {
                 val id = call.parameters["id"] ?: throw BadRequestException("Specify prototype id")
