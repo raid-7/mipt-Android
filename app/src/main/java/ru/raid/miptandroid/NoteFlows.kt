@@ -38,7 +38,7 @@ class NoteFlows(private val context: Context, private val lifecycle: Lifecycle) 
         val noteDao = AppDatabase.getInstance(context).noteDao()
         lifecycle.coroutineScope.launch(Dispatchers.IO) {
             val note = createWithData(data, imageUri, inSyncId)
-            val noteId = noteDao.insert(note)
+            noteDao.insert(note)
         }
     }
 
