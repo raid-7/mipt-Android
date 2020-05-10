@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ru.raid.miptandroid
+package ru.raid.miptandroid.barcode
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
@@ -37,13 +37,15 @@ class ReticleAnimator {
         }
 
         val rippleFadeOutAnimator = ValueAnimator.ofFloat(1f, 0f).setDuration(DURATION_RIPPLE_FADE_OUT_MS)
-        rippleFadeOutAnimator.startDelay = START_DELAY_RIPPLE_FADE_OUT_MS
+        rippleFadeOutAnimator.startDelay =
+            START_DELAY_RIPPLE_FADE_OUT_MS
         rippleFadeOutAnimator.addUpdateListener { animation ->
             rippleAlphaScale = animation.animatedValue as Float
         }
 
         val rippleExpandAnimator = ValueAnimator.ofFloat(0f, 1f).setDuration(DURATION_RIPPLE_EXPAND_MS)
-        rippleExpandAnimator.startDelay = START_DELAY_RIPPLE_EXPAND_MS
+        rippleExpandAnimator.startDelay =
+            START_DELAY_RIPPLE_EXPAND_MS
         rippleExpandAnimator.interpolator = FastOutSlowInInterpolator()
         rippleExpandAnimator.addUpdateListener { animation ->
             rippleSizeScale = animation.animatedValue as Float
@@ -51,14 +53,16 @@ class ReticleAnimator {
 
         val rippleStrokeWidthShrinkAnimator =
             ValueAnimator.ofFloat(1f, 0.5f).setDuration(DURATION_RIPPLE_STROKE_WIDTH_SHRINK_MS)
-        rippleStrokeWidthShrinkAnimator.startDelay = START_DELAY_RIPPLE_STROKE_WIDTH_SHRINK_MS
+        rippleStrokeWidthShrinkAnimator.startDelay =
+            START_DELAY_RIPPLE_STROKE_WIDTH_SHRINK_MS
         rippleStrokeWidthShrinkAnimator.interpolator = FastOutSlowInInterpolator()
         rippleStrokeWidthShrinkAnimator.addUpdateListener { animation ->
             rippleStrokeWidthScale = animation.animatedValue as Float
         }
 
         val fakeAnimatorForRestartDelay = ValueAnimator.ofInt(0, 0).setDuration(DURATION_RESTART_DORMANCY_MS)
-        fakeAnimatorForRestartDelay.startDelay = START_DELAY_RESTART_DORMANCY_MS
+        fakeAnimatorForRestartDelay.startDelay =
+            START_DELAY_RESTART_DORMANCY_MS
         animatorSet = AnimatorSet()
         animatorSet.playTogether(
                 rippleFadeInAnimator,

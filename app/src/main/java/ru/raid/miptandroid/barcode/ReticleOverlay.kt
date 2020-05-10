@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ru.raid.miptandroid
+package ru.raid.miptandroid.barcode
 
 import android.content.Context
 import android.graphics.*
@@ -22,6 +22,7 @@ import android.graphics.Paint.Style
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import ru.raid.miptandroid.R
 import kotlin.math.min
 
 
@@ -56,7 +57,9 @@ internal class ReticleOverlay(context: Context, attrs: AttributeSet?, defStyleAt
 
     init {
         ripplePaint.style = Style.STROKE
-        ripplePaint.color = ContextCompat.getColor(context, R.color.reticleRipple)
+        ripplePaint.color = ContextCompat.getColor(context,
+            R.color.reticleRipple
+        )
         rippleSizeOffset = resources.getDimensionPixelOffset(R.dimen.barcode_reticle_ripple_size_offset)
         rippleStrokeWidth = resources.getDimensionPixelOffset(R.dimen.barcode_reticle_ripple_stroke_width)
         rippleAlpha = ripplePaint.alpha

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         if (!noteFlows.isReady(note))
             return
 
-        supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        pruneBackStack(true)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentInfo, DetailedNoteFragment.forNote(note), DETAILED_NOTE_FRAGMENT)
             .addToBackStack(DETAILED_NOTE_FRAGMENT)
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         if (!noteFlows.isReady(note))
             return
 
-        supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, 0)
+        pruneBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentInfo, SyncPostFragment.forNote(note), SYNC_POST_FRAGMENT)
             .addToBackStack(SYNC_POST_FRAGMENT)
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showCamera() {
+        pruneBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentInfo, NoteCaptureFragment())
             .addToBackStack(null)
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showSyncLoad() {
+        pruneBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentInfo, SyncLoadFragment())
             .addToBackStack(null)
@@ -67,6 +69,11 @@ class MainActivity : AppCompatActivity() {
 
     fun popFragment() {
         supportFragmentManager.popBackStack()
+    }
+
+    private fun pruneBackStack(removeDetailedNote: Boolean = false) {
+        val flags = if (removeDetailedNote) FragmentManager.POP_BACK_STACK_INCLUSIVE else 0
+        supportFragmentManager.popBackStack(DETAILED_NOTE_FRAGMENT, flags)
     }
 
     companion object {

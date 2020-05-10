@@ -6,14 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.Camera
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.UseCase
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.overlay_sync_load.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import okhttp3.ResponseBody
+import ru.raid.miptandroid.barcode.BarcodeDetector
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream
 
@@ -32,8 +35,14 @@ class SyncLoadFragment : CameraFragment() {
         setChipText(R.string.camera_qr_explanation)
         lightMode = LightMode.TORCH
         setActionBarTransparency(false)
-        showReticleOverlay()
         runReticleUpdater()
+        showProgressOverlay()
+    }
+
+
+    override fun onCameraReady(cameraProvider: ProcessCameraProvider, camera: Camera) {
+        super.onCameraReady(cameraProvider, camera)
+        showReticleOverlay()
     }
 
     private fun runReticleUpdater() {

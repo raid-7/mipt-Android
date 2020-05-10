@@ -1,4 +1,4 @@
-package ru.raid.miptandroid
+package ru.raid.miptandroid.barcode
 
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
