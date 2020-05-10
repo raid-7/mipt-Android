@@ -10,6 +10,7 @@
     <color name="colorOptions">#a0a0a0</color>
     <color name="colorDivider">#a0a0a0</color>
     <color name="colorOverlayBackground">#5f000000</color>
+    <color name="colorTextareaBackground">#0e000000</color>
 
     <color name="cameraActionBarEnd">#00000000</color>
     <color name="cameraActionBarStart">#000000</color>

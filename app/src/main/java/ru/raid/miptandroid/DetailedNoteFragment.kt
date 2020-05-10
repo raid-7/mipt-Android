@@ -2,29 +2,21 @@ package ru.raid.miptandroid
 
 
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_detailed_note.noteImage
-import kotlinx.android.synthetic.main.fragment_detailed_note.noteText
+import kotlinx.android.synthetic.main.fragment_detailed_note.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
-import java.io.File
 
 
 class DetailedNoteFragment : Fragment() {
@@ -96,10 +88,6 @@ class DetailedNoteFragment : Fragment() {
             helper.constrainWidth(R.id.noteImage, 0)
             helper.constrainMaxWidth(R.id.noteImage, noteImage.width)
             helper.constrainDefaultWidth(R.id.noteImage, ConstraintSet.MATCH_CONSTRAINT_WRAP)
-        } else {
-            helper.constrainHeight(R.id.noteImage, 0)
-            helper.constrainMaxHeight(R.id.noteImage, noteImage.height)
-            helper.constrainDefaultHeight(R.id.noteImage, ConstraintSet.MATCH_CONSTRAINT_WRAP)
         }
 
         helper.applyTo(layout)

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,7 +48,7 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         val isTablet = resources.isTablet
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-        val recycleViewAdapter = NoteAdapter(noteListener)
+        val recycleViewAdapter = NoteAdapter(noteListener, viewLifecycleOwner.lifecycleScope)
         AppDatabase.getInstance(requireContext()).noteDao().getAll().observe(::getLifecycle) {
             recycleViewAdapter.notes = it
         }
