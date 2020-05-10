@@ -8,9 +8,11 @@
     <color name="chipText">#ffffff</color>
     <color name="chipBackground">#9A000000</color>
     <color name="colorOptions">#a0a0a0</color>
-    <color name="colorOverlayBackground">#a0a0a0</color>
+    <color name="colorOverlayBackground">#5f000000</color>
 
     <color name="cameraActionBarEnd">#00000000</color>
     <color name="cameraActionBarStart">#000000</color>
     <color name="cameraActionBarButton">#ffffff</color>
+    <color name="reticleRipple">#9AFFFFFF</color>
+    <color name="barcodeReticleStroke">#40000000</color>
 </resources>

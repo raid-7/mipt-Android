@@ -1,21 +1,17 @@
 package ru.raid.miptandroid
 
-import android.net.Uri
 import android.view.View
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.note_card.view.noteDate
-import kotlinx.android.synthetic.main.note_card.view.noteImage
-import kotlinx.android.synthetic.main.note_card.view.noteOptions
-import kotlinx.android.synthetic.main.note_card.view.noteText
+import kotlinx.android.synthetic.main.note_card.view.*
 import ru.raid.miptandroid.db.Note
-import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 class NoteViewHolder(itemView: View, private val listener: NoteActionListener) : RecyclerView.ViewHolder(itemView) {
-    private lateinit var currentNote: Note
+    lateinit var currentNote: Note
+        private set
 
     init {
         itemView.setOnClickListener {
@@ -23,6 +19,10 @@ class NoteViewHolder(itemView: View, private val listener: NoteActionListener) :
         }
         itemView.noteOptions.setOnClickListener {
             showPopupMenu(currentNote, it)
+        }
+        itemView.setOnLongClickListener {
+            showPopupMenu(currentNote, itemView.noteOptions)
+            true
         }
     }
 

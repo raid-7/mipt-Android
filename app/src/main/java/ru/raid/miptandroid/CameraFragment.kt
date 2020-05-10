@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.camera_action_bar.*
 import kotlinx.android.synthetic.main.fragment_camera.*
-import java.lang.Exception
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -49,6 +48,10 @@ abstract class CameraFragment : Fragment() {
     protected fun setActionBarTransparency(transparent: Boolean) {
         val res = if (transparent) 0 else R.drawable.top_action_bar_scrim
         cameraActionBar.setBackgroundResource(res)
+    }
+
+    protected fun setActionBarVisibility(visible: Boolean) {
+        cameraActionBar.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     protected open fun getCameraUseCases(): List<UseCase> {

@@ -1,5 +1,6 @@
 package ru.raid.miptandroid
 
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.LifecycleOwner
@@ -37,11 +38,12 @@ class BarcodeDetector(private val lifecycleOwner: LifecycleOwner) : ImageAnalysi
 
     @OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
-        if (!detectionEnabled)
-            return
-
-        val imageRotation = degreesToFirebaseRotation(imageProxy.imageInfo.rotationDegrees)
+        Log.d("BarcodeDetector", "detectionEnabled=${detectionEnabled}")
         imageProxy.use { proxy ->
+            if (!detectionEnabled)
+                return
+
+            val imageRotation = degreesToFirebaseRotation(proxy.imageInfo.rotationDegrees)
             proxy.image?.let {
                 try {
                     val fbImage = FirebaseVisionImage.fromMediaImage(it, imageRotation)
@@ -65,7 +67,7 @@ class BarcodeDetector(private val lifecycleOwner: LifecycleOwner) : ImageAnalysi
         val analysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
-//        analysis.setAnalyzer(executor, this)
+        analysis.setAnalyzer(executor, this)
         return analysis
     }
 
@@ -73,11 +75,13 @@ class BarcodeDetector(private val lifecycleOwner: LifecycleOwner) : ImageAnalysi
         image: FirebaseVisionImage,
         width: Int, height: Int
     ) {
+        Log.d("BarcodeDetector", "Processing")
         detector.detectInImage(image)
             .addOnSuccessListener {
                 val bc = it.firstOrNull { barcode -> isInCenter(barcode, width, height) }
                 bc?.rawValue?.let { value ->
                     lifecycleOwner.lifecycle.coroutineScope.launch {
+                        Log.d("BarcodeDetector", "Result sent")
                         resultChannel?.send(value)
                     }
                 }

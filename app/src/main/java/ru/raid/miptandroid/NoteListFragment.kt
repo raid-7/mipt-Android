@@ -69,6 +69,11 @@ class NoteListFragment : PermissionHelperFragment<NoteListFragment.PermissionTag
         syncLoadButton.setOnClickListener { showSyncLoad() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        notesList.adapter?.notifyDataSetChanged()
+    }
+
     override fun onPermissionsResult(tag: PermissionTag, granted: Boolean) {
         if (!granted)
             return

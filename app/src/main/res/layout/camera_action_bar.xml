@@ -6,7 +6,9 @@
     android:paddingStart="@dimen/top_action_bar_padding_horizontal"
     android:paddingEnd="@dimen/top_action_bar_padding_horizontal"
     android:id="@+id/cameraActionBar"
-    android:background="@drawable/top_action_bar_scrim">
+    android:background="@drawable/top_action_bar_scrim"
+    android:elevation="5dp"
+    android:outlineProvider="none">
 
   <ImageView
       android:id="@+id/closeButton"

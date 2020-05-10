@@ -1,7 +1,10 @@
 package ru.raid.miptandroid
 
 import com.google.gson.Gson
-import io.ktor.application.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.application.log
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.gson.gson
@@ -10,15 +13,13 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import io.ktor.http.content.streamProvider
-import io.ktor.response.*
-import io.ktor.request.*
+import io.ktor.request.receiveMultipart
+import io.ktor.response.respond
+import io.ktor.response.respondBytes
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import io.ktor.util.hex
-import io.ktor.utils.io.core.readBytes
-import org.slf4j.Logger
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -75,7 +76,7 @@ fun Application.module(testing: Boolean = false) {
             get("/{id}/image") {
                 val id = call.parameters["id"] ?: throw BadRequestException("Specify prototype id")
                 val image = service.getNoteImage(id)
-                call.respondBytes(image, ContentType.Image.PNG, HttpStatusCode.OK)
+                call.respondBytes(image, ContentType.Image.JPEG, HttpStatusCode.OK)
             }
         }
     }

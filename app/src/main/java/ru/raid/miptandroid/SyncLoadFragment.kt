@@ -2,47 +2,70 @@ package ru.raid.miptandroid
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import androidx.camera.core.CameraSelector
+import android.view.ViewGroup
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.UseCase
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import kotlinx.android.synthetic.main.fragment_camera.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.android.synthetic.main.overlay_sync_load.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
-import retrofit2.HttpException
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream
-import java.net.HttpURLConnection.HTTP_NOT_FOUND
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class SyncLoadFragment : CameraFragment() {
     private lateinit var detector: BarcodeDetector
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val topContainer = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+        inflater.inflate(R.layout.overlay_sync_load, topContainer, true)
+        return topContainer
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setChipText(R.string.camera_qr_explanation)
-        setActionBarTransparency(false)
         lightMode = LightMode.TORCH
+        setActionBarTransparency(false)
+        showReticleOverlay()
+        runReticleUpdater()
+    }
+
+    private fun runReticleUpdater() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (isActive) {
+                delay(20)
+                reticleOverlay.invalidate()
+            }
+        }
     }
 
     override fun getCameraUseCases(): List<UseCase> {
         return super.getCameraUseCases() + makeDetector()
     }
 
+    private fun showReticleOverlay() {
+        reticleOverlay.visibility = View.VISIBLE
+        progressOverlay.visibility = View.GONE
+        setActionBarVisibility(true)
+    }
+
+    private fun showProgressOverlay() {
+        reticleOverlay.visibility = View.GONE
+        progressOverlay.visibility = View.VISIBLE
+        setActionBarVisibility(false)
+    }
+
     private fun runResultProcessor(): SendChannel<String> {
-        val ch = Channel<String>()
+        val ch = Channel<String>(Channel.CONFLATED) // the best kotlin feature ever
         viewLifecycleOwner.lifecycleScope.launch {
             for (value in ch) {
+                Log.d("SyncLoad", "Got value: ${value}")
                 if (processResult(value))
                     break
             }
@@ -52,10 +75,19 @@ class SyncLoadFragment : CameraFragment() {
 
     private suspend fun processResult(value: String): Boolean {
         detector.detectionEnabled = false
+        withContext(Dispatchers.Main) {
+            showProgressOverlay()
+        }
+
         if (tryLoadNote(value))
             return true
 
+        withContext(Dispatchers.Main) {
+            showReticleOverlay()
+        }
+        delay(600)
         detector.detectionEnabled = true
+
         return false
     }
 
@@ -68,10 +100,8 @@ class SyncLoadFragment : CameraFragment() {
             val image = service.fetchNoteImage(id)
             imagePath = saveImage(image)
         } catch (exc: Exception) {
-            if (!(exc is HttpException && exc.code() == HTTP_NOT_FOUND)) {
-                launch(Dispatchers.Main) {
-                    processFailure(exc)
-                }
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                processFailure(exc)
             }
             return@withContext false
         }
@@ -86,7 +116,7 @@ class SyncLoadFragment : CameraFragment() {
                 val buf = ByteArray(DEFAULT_BUFFER_SIZE)
                 while (true) {
                     val read = inp.read(buf, 0, buf.size)
-                    if (read == 0) {
+                    if (read < 0) {
                         break
                     }
                     out.write(buf, 0, read)
@@ -103,7 +133,7 @@ class SyncLoadFragment : CameraFragment() {
     }
 
     private fun runFailureProcessor(): SendChannel<Exception> {
-        val ch = Channel<Exception>()
+        val ch = Channel<Exception>(Channel.CONFLATED)
         viewLifecycleOwner.lifecycleScope.launch {
             for (exc in ch) {
                 processFailure(exc)
@@ -114,8 +144,9 @@ class SyncLoadFragment : CameraFragment() {
 
     // There're may be races but ok
     private suspend fun processFailure(exc: Exception) = withContext(Dispatchers.Main) {
+        Log.e("SyncLoad", "Failure", exc)
         chipText = exc.message ?: "Unknown failure"
-        delay(1000)
+        delay(4000)
         setChipText(R.string.camera_qr_explanation)
     }
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.fragment_sync_post.*
@@ -20,6 +19,8 @@ import retrofit2.HttpException
 import ru.raid.miptandroid.db.AppDatabase
 import ru.raid.miptandroid.db.Note
 import java.io.IOException
+import kotlin.math.max
+import kotlin.math.min
 
 
 class SyncPostFragment : Fragment() {
@@ -52,18 +53,17 @@ class SyncPostFragment : Fragment() {
         }
     }
 
-    @MainThread
     private fun showLoadAnimation() {
         progressOverlay.visibility = View.VISIBLE
         qrView.visibility = View.GONE
     }
 
-    @MainThread
     private fun showSyncQr(syncId: String) {
         Log.d("SyncPost", syncId)
         progressOverlay.visibility = View.GONE
         qrView.visibility = View.VISIBLE
-        qrView.setData(syncId).build()
+        val size = max(min(qrView.width, qrView.height), 96)
+        qrView.setData(syncId).setSize(size).build()
     }
 
     private fun syncFailed() {
